@@ -21,4 +21,18 @@ router.get('/:id', (req, res) => {
   res.status(404).json({ message: 'Product not found' });
 });
 
+// POST /products
+router.post('/', (req, res) => {
+  const { name, price, image, categoryId } = req.body;
+  const product = {
+    id: products.length + 1,
+    name,
+    price,
+    image,
+    categoryId,
+  };
+  products.push(product);
+  res.status(201).json(product);
+});
+
 module.exports = router;
