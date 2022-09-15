@@ -21,7 +21,6 @@ router.get('/:id', (req, res) => {
   res.status(404).json({ message: 'Product not found' });
 });
 
-// POST /products
 router.post('/', (req, res) => {
   const { name, price, image, categoryId } = req.body;
   const product = {
@@ -33,6 +32,54 @@ router.post('/', (req, res) => {
   };
   products.push(product);
   res.status(201).json(product);
+});
+
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+  const product = products.find((p) => p.id === parseInt(id));
+  if ((body.name, body.price, body.image, body.categoryId) == null) {
+    res.status(400).json({ message: 'Name, price, image and categoryId are required' });
+  }
+  if (product) {
+    const index = products.indexOf(product);
+    const newProduct = {
+      ...product,
+      ...body,
+    };
+    products[index] = newProduct;
+    res.json(newProduct);
+  }
+  res.status(404).json({ message: 'Product not found' });
+});
+
+router.patch('/:id', (req, res) => {
+  const body = req.body;
+  const { id } = req.params;
+  const product = products.find((p) => p.id === parseInt(id));
+  if (product) {
+    const index = products.indexOf(product);
+    const productUpdated = {
+      ...product,
+      ...body,
+    };
+    products[index] = productUpdated;
+    res.json(productUpdated);
+  }
+  res.status(404).json({ message: 'Product not found' });
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  const product = products.find((p) => p.id === parseInt(id));
+  if (product) {
+    products = products.filter((p) => p.id !== parseInt(id));
+    res.json({
+      message: 'Product deleted',
+      product
+    });
+  }
+  res.status(404).json({ message: 'Product not found' });
 });
 
 module.exports = router;
