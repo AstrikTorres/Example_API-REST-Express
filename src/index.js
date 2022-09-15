@@ -1,11 +1,8 @@
 const express = require('express');
 const routerApi = require('./routes/index');
-const generateData = require('./db/init.db');
 
 const app = express();
 const port = 3000;
-
-const { products, categories } = generateData(100, 10);
 
 app.use(express.json());
 
