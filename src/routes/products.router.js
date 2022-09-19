@@ -24,14 +24,18 @@ router.get('/filter', (req, res) => {
   });
 });
 
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const product = service.getProduct(parseInt(id));
-  if (product != null) {
-    res.json(product);
+router.get('/:id', (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = service.getProduct(parseInt(id));
+    if (product != null) {
+      res.json(product);
+    }
+  
+    res.status(404).json({ message: 'Product not found' });
+  } catch (error) {
+    next(error);
   }
-
-  res.status(404).json({ message: 'Product not found' });
 });
 
 router.post('/', (req, res) => {

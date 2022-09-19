@@ -10,6 +10,7 @@ class ProductsService {
   }
 
   getProduct(id) {
+    const name = this.products.some();
     return this.products.find(product => product.id === id);
   }
 
