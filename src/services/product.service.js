@@ -1,4 +1,5 @@
 const { products } = require('../db/init.db');
+const boom = require('@hapi/boom');
 
 class ProductsService {
   constructor() {
@@ -6,12 +7,18 @@ class ProductsService {
   }
 
   getProducts(offset, limit) {
-    return this.products.slice(offset, limit);
+    return this.products.slice(offset, limit).filter(p => !p.isBlocked);
   }
 
   getProduct(id) {
-    const name = this.products.some();
-    return this.products.find(product => product.id === id);
+    const product = this.products.find(product => product.id === id);
+    if (!product) {
+      throw boom.notFound('Product not found');
+    }
+    if (product.isBlocked) {
+      throw boom.conflict('Product is blocked');
+    }
+    return product;
   }
 
   searchProducts(query) {
@@ -29,15 +36,16 @@ class ProductsService {
 
   updateProduct(id, product) {
     const index = this.products.findIndex(product => product.id === id);
-    if (index >= 0) {
-      const productUpdated = {
-        ...this.products[index],
-        ...product,
-      };
-      this.products[index] = productUpdated;
-      return productUpdated;
+    if (index === -1) {
+      throw boom.notFound('Product not found');
     }
-    return null;
+
+    const productUpdated = {
+      ...this.products[index],
+      ...product,
+    };
+    this.products[index] = productUpdated;
+    return productUpdated;
   }
 
   deleteProduct(id) {

@@ -31,8 +31,6 @@ router.get('/:id', (req, res, next) => {
     if (product != null) {
       res.json(product);
     }
-  
-    res.status(404).json({ message: 'Product not found' });
   } catch (error) {
     next(error);
   }
@@ -69,16 +67,18 @@ router.patch('/:id', (req, res) => {
   res.status(404).json({ message: 'Product not found' });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res, next) => {
   const { id } = req.params;
-  const isDeleted = service.deleteProduct(parseInt(id));
-  if (isDeleted) {
-    res.status(200).json({
-      message: 'Product deleted'
-    });
+  try {
+    const isDeleted = service.deleteProduct(parseInt(id));
+    if (isDeleted) {
+      res.status(200).json({
+        message: 'Product deleted'
+      });
+    }
+  } catch (error) {
+    next(error);
   }
-
-  res.status(404).json({ message: 'Product not found' });
 });
 
 module.exports = router;

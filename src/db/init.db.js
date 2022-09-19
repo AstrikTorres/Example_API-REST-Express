@@ -9,7 +9,8 @@ for (let i = 1; i < 100+1; i++) {
     name: faker.commerce.productName(),
     price: faker.commerce.price(),
     image: faker.image.image(),
-    categoryId: faker.random.number({ min: 1, max: 10 }),
+    categoryId: faker.datatype.number({ min: 1, max: 10 }),
+    isBlocked: faker.datatype.boolean(),
   });
 }
 for (let i = 1; i < 10+1; i++) {
